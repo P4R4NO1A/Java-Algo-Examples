@@ -1,0 +1,32 @@
+/*
+Usa las listas definidas en el apartado anterior.
+Calcula y muestra en el LogCat:
+El estudiante con la puntuación más alta.
+La calificación promedio de la clase.
+*/
+
+// Find the student with the highest score
+Student topStudent = studentList.stream()
+    .max(Comparator.comparingInt(Student::getScore))
+    .orElse(null);
+
+if (topStudent != null) {
+    Log.d("TopStudent", "Estudiante con mayor puntuación: " + topStudent.toString());
+}
+
+// Calculate the average grade
+double averageScore = studentList.stream()
+    .mapToInt(Student::getScore)
+    .average()
+    .orElse(0);
+
+Log.d("AverageScore", "Puntuación promedio: " + averageScore);
+/*
+_Implementation Steps_
+1. Add Logic to MainActivity:
+-Use the studentList created earlier.
+-Implement the logic to calculate the top student and average grade.
+-Use Log.d to output the results.
+2. Test the Algorithm:
+-Run the app and confirm the correct results in LogCat.
+*/
