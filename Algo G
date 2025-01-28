@@ -1,0 +1,29 @@
+// Algorithm for counting medications per day
+    public static Map<String, Integer> getMedicationsPerDay(List<MedicationSchedule> schedules) {
+        Map<String, Integer> medicationsPerDay = new HashMap<>();
+        
+        for(MedicationSchedule schedule : schedules) {
+            medicationsPerDay.merge(schedule.day, 1, Integer::sum);
+        }
+        
+        return medicationsPerDay;
+    }
+
+
+    // Algorithm for counting different medications per day
+    public static Map<String, Integer> getDifferentMedicationsPerDay(List<MedicationSchedule> schedules) {
+        Map<String, Set<String>> medicationsPerDay = new HashMap<>();
+        
+        for(MedicationSchedule schedule : schedules) {
+            medicationsPerDay
+                .computeIfAbsent(schedule.day, k -> new HashSet<>())
+                .add(schedule.medication);
+        }
+        
+        return medicationsPerDay.entrySet().stream()
+            .collect(Collectors.toMap(
+                Map.Entry::getKey,
+                entry -> entry.getValue().size()
+            ));
+    }
+}
