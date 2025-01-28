@@ -1,0 +1,35 @@
+/*
+Usa las listas definidas en el apartado anterior.
+Calcula y muestra en el LogCat:
+El vehículo con la mejor eficiencia de combustible.
+El consumo total de combustible para todos los vehículos.
+*/
+
+//Find the Vehicle with the Best Efficiency:
+ private Vehicle findBestEfficiencyVehicle(List<Vehicle> vehicles) {
+    Vehicle bestVehicle = vehicles.get(0);
+    for (Vehicle vehicle : vehicles) {
+        if (vehicle.calculateFuelEfficiency() > bestVehicle.calculateFuelEfficiency()) {
+            bestVehicle = vehicle;
+        }
+    }
+    return bestVehicle;
+}
+
+
+//Calculate Total Fuel Consumption:
+ private double calculateTotalFuelConsumption(List<Vehicle> vehicles) {
+    double totalFuel = 0;
+    for (Vehicle vehicle : vehicles) {
+        totalFuel += vehicle.getFuelConsumption();
+    }
+    return totalFuel;
+}
+
+
+//Log Results in onCreate():
+ Vehicle bestVehicle = findBestEfficiencyVehicle(vehicleList);
+Log.d("VehicleLog", "Best Vehicle: " + bestVehicle.toString());
+
+double totalFuelConsumption = calculateTotalFuelConsumption(vehicleList);
+Log.d("VehicleLog", "Total Fuel Consumption: " + totalFuelConsumption);
