@@ -1,0 +1,36 @@
+/*
+A POJO represents a Person with a list of their friends. Add a method to return only the
+friends who have names longer than a given length.
+*/
+
+public class Person {
+private String name;
+private List<String> friends;
+
+public Person(String name, List<String> friends) {
+this.name = name;
+this.friends = friends;
+}
+public List<String> getFriendsWithNameLengthGreaterThan(int
+length) {
+List<String> filteredFriends = new ArrayList<>();
+for (String friend : friends) {
+if (friend.length() > length) {
+filteredFriends.add(friend);
+}
+}
+return filteredFriends;
+}
+@Override
+public String toString() {
+return "Person{" +
+"name='" + name + '\'' +
+", friends=" + friends +
+'}';
+}
+}
+// Usage
+List<String> friends = Arrays.asList("Alice", "Bob", "Catherine");
+Person person = new Person("John", friends);
+List<String> filtered = person.getFriendsWithNameLengthGreaterThan(3);
+System.out.println(filtered); // Output: [Alice, Catherine]
