@@ -1,8 +1,10 @@
 /*
+
 Usa las listas definidas en el apartado anterior.
 Calcula y muestra en el LogCat:
 El trabajador con el salario más alto.
 El salario promedio de todos los trabajadores.
+
 */
 
 //Finding the Worker with the Highest Salary:
