@@ -1,0 +1,44 @@
+/*
+a) Crea una variable de tipo Map<> donde se almacene la temperatura máxima registrada en cada habitación.
+   b) Calcula la temperatura media de cada franja horaria (mañana: 8-12h, tarde: 14-18h, noche: 20-22h).
+*/
+
+//a) Create a Map to store the maximum temperature per room:
+private void mostrarTemperaturaMaximaPorUbicacion(List<Medicion> mediciones) {
+    Map<String, Double> maxTemperaturas = new HashMap<>();
+    for (Medicion medicion : mediciones) {
+        String ubicacion = medicion.getUbicacion();
+        double temp = medicion.getTemperatura();
+        if (!maxTemperaturas.containsKey(ubicacion) || temp > maxTemperaturas.get(ubicacion)) {
+            maxTemperaturas.put(ubicacion, temp);
+        }
+    }
+
+    // Show results in LogCat
+    for (Map.Entry<String, Double> entry : maxTemperaturas.entrySet()) {
+        Log.d("MaxTemperatura", "Ubicación: " + entry.getKey() + ", Temperatura máxima: " + entry.getValue());
+    }
+}
+
+//b) Calculate the average temperature for different time periods:
+private void calcularTemperaturaMediaPorFranjaHoraria(List<Medicion> mediciones) {
+    double totalMañana = 0, totalTarde = 0, totalNoche = 0;
+    int countMañana = 0, countTarde = 0, countNoche = 0;
+
+    for (Medicion medicion : mediciones) {
+        if (medicion.getHora() >= 8 && medicion.getHora() <= 12) {
+            totalMañana += medicion.getTemperatura();
+            countMañana++;
+        } else if (medicion.getHora() >= 14 && medicion.getHora() <= 18) {
+            totalTarde += medicion.getTemperatura();
+            countTarde++;
+        } else if (medicion.getHora() >= 20 && medicion.getHora() <= 22) {
+            totalNoche += medicion.getTemperatura();
+            countNoche++;
+        }
+    }
+
+    Log.d("TemperaturaMedia", "Mañana: " + (totalMañana / countMañana) + "°C");
+    Log.d("TemperaturaMedia", "Tarde: " + (totalTarde / countTarde) + "°C");
+    Log.d("TemperaturaMedia", "Noche: " + (totalNoche / countNoche) + "°C");
+}
