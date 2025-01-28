@@ -1,0 +1,18 @@
+/*
+Convert three lists into a list of Registro objects.
+*/
+
+public static List<Registro> generarRegistros(List<String> usuarios,
+List<Integer> minutos, List<String> tipos) {
+List<Registro> registros = new ArrayList<>();
+for (int i = 0; i < usuarios.size(); i++) {
+registros.add(new Registro(usuarios.get(i), minutos.get(i),
+tipos.get(i)));
+}
+return registros;
+}
+// Call the method in MainActivity
+List<Registro> registros = generarRegistros(USUARIO, MINUTO, TIPO);
+for (Registro registro : registros) {
+Log.d("MainActivity", registro.toString());
+}
