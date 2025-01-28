@@ -1,0 +1,65 @@
+/*
+   a) Calcula la temperatura media para las habitaciones con AC encendido y apagado. Almacena los resultados en un Map<String, Double>.
+   b) Encuentra las habitaciones con temperatura superior a 23°C y crea una Lista con sus nombres.
+*/
+
+// MainActivity.java
+public class MainActivity extends AppCompatActivity {
+    static String ROOMS[] = {"Cocina", "Sala", "Dormitorio", "Oficina", "Baño"};
+    static double TEMP[] = {22.5, 23.1, 21.8, 24.2, 22.0};
+    static boolean AC_ON[] = {true, true, false, true, false};
+    
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        
+        // Setting the lists into one list
+        List<TemperatureReading> readings = createReadingsList(ROOMS, TEMP, AC_ON);
+        for(TemperatureReading reading : readings) {
+            Log.d("ExamenIoT", reading.toString());
+        }
+        
+        // ALGORITMO
+        Map<String, Double> averageTemps = calculateAverageTemperatures(readings);
+        List<String> hotRooms = findHotRooms(readings);
+        
+        Log.d("ExamenIoT", "Temperaturas promedio: " + averageTemps);
+        Log.d("ExamenIoT", "Habitaciones calientes: " + hotRooms);
+    }
+    
+    private List<TemperatureReading> createReadingsList(String[] rooms, double[] temps, boolean[] acStatus) {
+        List<TemperatureReading> readings = new ArrayList<>();
+        for(int i = 0; i < rooms.length; i++) {
+            readings.add(new TemperatureReading(rooms[i], temps[i], acStatus[i]));
+        }
+        return readings;
+    }
+    
+    private Map<String, Double> calculateAverageTemperatures(List<TemperatureReading> readings) {
+        Map<String, Double> result = new HashMap<>();
+        double sumAcOn = 0, sumAcOff = 0;
+        int countAcOn = 0, countAcOff = 0;
+        
+        for(TemperatureReading reading : readings) {
+            if(reading.isAcOn()) {
+                sumAcOn += reading.getTemperature();
+                countAcOn++;
+            } else {
+                sumAcOff += reading.getTemperature();
+                countAcOff++;
+            }
+        }
+        
+        result.put("AC Encendido", countAcOn > 0 ? sumAcOn/countAcOn : 0);
+        result.put("AC Apagado", countAcOff > 0 ? sumAcOff/countAcOff : 0);
+        return result;
+    }
+    
+    private List<String> findHotRooms(List<TemperatureReading> readings) {
+        return readings.stream()
+                .filter(r -> r.getTemperature() > 23.0)
+                .map(TemperatureReading::getRoomName)
+                .collect(Collectors.toList());
+    }
+}
