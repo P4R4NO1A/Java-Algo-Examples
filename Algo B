@@ -1,0 +1,22 @@
+/*
+Usa las listas definidas en el apartado anterior.
+Calcula y muestra en el LogCat:
+El producto con los ingresos más altos.
+La cantidad total de productos vendidos.
+*/
+
+// Find the product with the highest revenue
+Product highestRevenueProduct = productList.stream()
+    .max(Comparator.comparingDouble(Product::calculateRevenue))
+    .orElse(null);
+
+if (highestRevenueProduct != null) {
+    Log.d("HighestRevenue", "Producto con mayores ingresos: " + highestRevenueProduct.toString());
+}
+
+// Calculate the total quantity sold
+int totalQuantity = productList.stream()
+    .mapToInt(Product::getQuantitySold)
+    .sum();
+
+Log.d("TotalQuantity", "Cantidad total de productos vendidos: " + totalQuantity);
