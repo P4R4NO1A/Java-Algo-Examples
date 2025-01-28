@@ -1,0 +1,36 @@
+/*
+Calculate the total time users spent connected, and the current number of connected
+users.
+*/
+
+public static Map<String, Integer>
+calcularTiempoConectado(List<Registro> registros) {
+Map<String, Integer> tiempoConectado = new HashMap<>();
+Map<String, Integer> tiempoInicio = new HashMap<>();
+for (Registro registro : registros) {
+if (registro.tipo.equals("E")) {
+tiempoInicio.put(registro.usuario, registro.minuto);
+} else if (registro.tipo.equals("S")) {
+int tiempo = registro.minuto -
+tiempoInicio.getOrDefault(registro.usuario, registro.minuto);
+tiempoConectado.put(registro.usuario,
+tiempoConectado.getOrDefault(registro.usuario, 0) + tiempo);
+tiempoInicio.remove(registro.usuario);
+}
+}
+// Add ongoing time for currently connected users
+int minutoActual = 10; // Example: current minute
+for (Map.Entry<String, Integer> entry : tiempoInicio.entrySet()) {
+int tiempo = minutoActual - entry.getValue();
+tiempoConectado.put(entry.getKey(),
+tiempoConectado.getOrDefault(entry.getKey(), 0) + tiempo);
+}
+return tiempoConectado;
+}
+// Usage
+
+Map<String, Integer> tiempos = calcularTiempoConectado(registros);
+for (Map.Entry<String, Integer> entry : tiempos.entrySet()) {
+Log.d("MainActivity", entry.getKey() + " estuvo conectado por " +
+entry.getValue() + " minutos");
+}
