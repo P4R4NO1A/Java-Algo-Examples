@@ -1,0 +1,23 @@
+/*
+Usa las listas definidas en el apartado anterior.
+Calcula y muestra en el LogCat:
+El trabajador con el salario más alto.
+El salario promedio de todos los trabajadores.
+*/
+
+//Finding the Worker with the Highest Salary:
+Worker highestPaid = workerList.stream()
+    .max(Comparator.comparingInt(Worker::calculateSalary))
+    .orElse(null);
+
+if (highestPaid != null) {
+    Log.d("HighestPaid", "Trabajador con mayor salario: " + highestPaid.toString());
+}
+
+//Calculating Average Salary:
+double averageSalary = workerList.stream()
+    .mapToInt(Worker::calculateSalary)
+    .average()
+    .orElse(0);
+
+Log.d("AverageSalary", "Salario promedio: " + averageSalary);
