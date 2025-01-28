@@ -1,0 +1,54 @@
+/*
+ a) Para cada día, calcula la temperatura media. Almacena la información en un mapa. Muestra el mapa en el LogCat.
+   
+   b) Modifica el algoritmo anterior para encontrar la variación máxima de temperatura (diferencia entre la temperatura más alta y más baja) para cada día.
+*/
+
+// Clase para los algoritmos
+public class AnalizadorTemperatura {
+    // Calcular temperatura media por día
+    public static Map<String, Double> calcularTemperaturaMediaPorDia(List<LecturaTemperatura> lecturas) {
+        Map<String, List<Double>> temperaturasporDia = new HashMap<>();
+        Map<String, Double> temperaturaMedia = new HashMap<>();
+        
+        // Agrupar temperaturas por día
+        for(LecturaTemperatura lectura : lecturas) {
+            temperaturasporDia
+                .computeIfAbsent(lectura.getDia(), k -> new ArrayList<>())
+                .add(lectura.getTemperatura());
+        }
+        
+        // Calcular media para cada día
+        for(Map.Entry<String, List<Double>> entry : temperaturasporDia.entrySet()) {
+            double media = entry.getValue().stream()
+                .mapToDouble(Double::doubleValue)
+                .average()
+                .orElse(0.0);
+            temperaturaMedia.put(entry.getKey(), Math.round(media * 100.0) / 100.0);
+        }
+        
+        return temperaturaMedia;
+    }
+    
+    // Calcular variación máxima por día
+    public static Map<String, Double> calcularVariacionTemperaturaPorDia(List<LecturaTemperatura> lecturas) {
+        Map<String, List<Double>> temperaturasporDia = new HashMap<>();
+        Map<String, Double> variacionMaxima = new HashMap<>();
+        
+        // Agrupar temperaturas por día
+        for(LecturaTemperatura lectura : lecturas) {
+            temperaturasporDia
+                .computeIfAbsent(lectura.getDia(), k -> new ArrayList<>())
+                .add(lectura.getTemperatura());
+        }
+        
+        // Calcular variación para cada día
+        for(Map.Entry<String, List<Double>> entry : temperaturasporDia.entrySet()) {
+            double max = Collections.max(entry.getValue());
+            double min = Collections.min(entry.getValue());
+            variacionMaxima.put(entry.getKey(), Math.round((max - min) * 100.0) / 100.0);
+        }
+        
+        return variacionMaxima;
+    }
+}
