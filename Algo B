@@ -1,8 +1,10 @@
 /*
+
 Usa las listas definidas en el apartado anterior.
 Calcula y muestra en el LogCat:
 El producto con los ingresos más altos.
 La cantidad total de productos vendidos.
+
 */
 
 // Find the product with the highest revenue
