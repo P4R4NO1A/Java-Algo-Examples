@@ -20,3 +20,13 @@ int totalQuantity = productList.stream()
     .sum();
 
 Log.d("TotalQuantity", "Cantidad total de productos vendidos: " + totalQuantity);
+
+/*
+_Implementation Steps_
+1. Add Logic to MainActivity:
+-Use the productList created earlier.
+-Implement the logic to calculate the highest revenue and total quantity.
+-Log the results to verify correctness.
+2. Test It:
+-Run the app and check the LogCat for the correct results.
+*/
