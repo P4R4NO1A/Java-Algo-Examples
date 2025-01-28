@@ -1,0 +1,29 @@
+/*
+A POJO represents a Book with a list of tags. Add a method to return unique tags as a
+Set.
+*/
+
+public class Book {
+private String title;
+private List<String> tags;
+public Book(String title, List<String> tags) {
+this.title = title;
+this.tags = tags;
+}
+public Set<String> getUniqueTags() {
+return new HashSet<>(tags);
+}
+@Override
+public String toString() {
+
+return "Book{" +
+"title='" + title + '\'' +
+", tags=" + tags +
+'}';
+}
+}
+// Usage
+List<String> tags = Arrays.asList("Fiction", "Mystery", "Fiction");
+Book book = new Book("The Hound of the Baskervilles", tags);
+Set<String> uniqueTags = book.getUniqueTags();
+System.out.println(uniqueTags); // Output: [Fiction, Mystery]
