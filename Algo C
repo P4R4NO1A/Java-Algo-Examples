@@ -1,8 +1,10 @@
 /*
+
 Usa las listas definidas en el apartado anterior.
 Calcula y muestra en el LogCat:
 El estudiante con la puntuación más alta.
 La calificación promedio de la clase.
+
 */
 
 // Find the student with the highest score
