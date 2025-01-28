@@ -1,0 +1,25 @@
+/*
+For each variety of orange, calculate the total volume of juice produced.
+
+static List<String> VARIEDAD = Arrays.asList("valencia", "navel",
+"valencia", "clementina");
+static List<Double> DIAMETRO = Arrays.asList(8.0, 9.0, 7.0, 3.0);
+*/
+
+public static Map<String, Double> calcularVolumen(List<String>
+variedad, List<Double> diametro) {
+Map<String, Double> volumenes = new HashMap<>();
+for (int i = 0; i < variedad.size(); i++) {
+double volumen = Math.PI * Math.pow(diametro.get(i) / 2, 3) *
+4 / 3; // Approx. sphere volume
+volumenes.put(variedad.get(i),
+volumenes.getOrDefault(variedad.get(i), 0.0) + volumen);
+}
+return volumenes;
+}
+// Usage
+Map<String, Double> volumenes = calcularVolumen(VARIEDAD, DIAMETRO);
+for (Map.Entry<String, Double> entry : volumenes.entrySet()) {
+Log.d("MainActivity", "Variedad: " + entry.getKey() + ", Volumen:
+" + entry.getValue());
+}
