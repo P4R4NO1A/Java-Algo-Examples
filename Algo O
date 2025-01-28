@@ -1,0 +1,38 @@
+/*
+A POJO represents a Student with their subjects and grades. Add a method to return a
+map of subjects to grades.
+*/
+
+public class Student {
+private String name;
+private Map<String, Integer> subjectGrades;
+public Student(String name, Map<String, Integer> subjectGrades) {
+this.name = name;
+this.subjectGrades = subjectGrades;
+}
+public Map<String, Integer> getGradesAboveThreshold(int threshold)
+{
+Map<String, Integer> filteredGrades = new HashMap<>();
+for (Map.Entry<String, Integer> entry :
+subjectGrades.entrySet()) {
+if (entry.getValue() > threshold) {
+filteredGrades.put(entry.getKey(), entry.getValue());
+}
+}
+return filteredGrades;
+}
+@Override
+public String toString() {
+return "Student{" +
+"name='" + name + '\'' +
+", subjectGrades=" + subjectGrades +
+'}';
+}
+}
+// Usage
+Map<String, Integer> grades = Map.of("Math", 85, "History", 92,
+"Science", 78);
+
+Student student = new Student("Alice", grades);
+Map<String, Integer> highGrades = student.getGradesAboveThreshold(80);
+System.out.println(highGrades); // Output: {Math=85, History=92}
