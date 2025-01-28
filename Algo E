@@ -1,0 +1,49 @@
+/*
+  a) Crea una variable de tipo Map<> donde se almacene el precio promedio de venta de cada tipo de producto.
+   b) Encuentra la hora del día con mayor volumen de ventas (suma total de precios).
+*/
+
+//a) Create a Map to store the average sale price of each product:
+private void calcularPrecioPromedioPorProducto(List<Venta> ventas) {
+    Map<String, Double> preciosPromedio = new HashMap<>();
+    Map<String, Integer> conteoVentas = new HashMap<>();
+    
+    for (Venta venta : ventas) {
+        String producto = venta.getProducto();
+        double precio = venta.getPrecio();
+        preciosPromedio.put(producto, preciosPromedio.getOrDefault(producto, 0.0) + precio);
+        conteoVentas.put(producto, conteoVentas.getOrDefault(producto, 0) + 1);
+    }
+
+    // Calculate the average price for each product
+    for (Map.Entry<String, Double> entry : preciosPromedio.entrySet()) {
+        String producto = entry.getKey();
+        double totalPrecio = entry.getValue();
+        int count = conteoVentas.get(producto);
+        double promedio = totalPrecio / count;
+        Log.d("PrecioPromedio", "Producto: " + producto + ", Precio promedio: " + promedio);
+    }
+}
+
+//b) Find the hour of the day with the highest sales volume (sum of prices):
+private void horaConMayorVolumenDeVentas(List<Venta> ventas) {
+    Map<Long, Double> ventasPorHora = new HashMap<>();
+    
+    for (Venta venta : ventas) {
+        long hora = venta.getHora();
+        double precio = venta.getPrecio();
+        ventasPorHora.put(hora, ventasPorHora.getOrDefault(hora, 0.0) + precio);
+    }
+
+    // Find the hour with the highest sales volume
+    long mejorHora = -1;
+    double maxVentas = 0;
+    for (Map.Entry<Long, Double> entry : ventasPorHora.entrySet()) {
+        if (entry.getValue() > maxVentas) {
+            maxVentas = entry.getValue();
+            mejorHora = entry.getKey();
+        }
+    }
+    
+    Log.d("HoraMayorVentas", "La hora con mayor volumen de ventas es: " + mejorHora + " con " + maxVentas + "€");
+}
