@@ -1,44 +1,104 @@
-/*
-a) Crea una variable de tipo Map<> donde se almacene la temperatura máxima registrada en cada habitación.
-   b) Calcula la temperatura media de cada franja horaria (mañana: 8-12h, tarde: 14-18h, noche: 20-22h).
-*/
+/**
+ * Analizador de temperaturas por ubicación y franja horaria
+ */
+public class AnalizadorTemperaturas {
+    private static final String TAG = "AnalizadorTemperaturas";
 
-//a) Create a Map to store the maximum temperature per room:
-private void mostrarTemperaturaMaximaPorUbicacion(List<Medicion> mediciones) {
-    Map<String, Double> maxTemperaturas = new HashMap<>();
-    for (Medicion medicion : mediciones) {
-        String ubicacion = medicion.getUbicacion();
-        double temp = medicion.getTemperatura();
-        if (!maxTemperaturas.containsKey(ubicacion) || temp > maxTemperaturas.get(ubicacion)) {
-            maxTemperaturas.put(ubicacion, temp);
+    // Constantes para franjas horarias
+    private static final int HORA_INICIO_MANANA = 8;
+    private static final int HORA_FIN_MANANA = 12;
+    private static final int HORA_INICIO_TARDE = 14;
+    private static final int HORA_FIN_TARDE = 18;
+    private static final int HORA_INICIO_NOCHE = 20;
+    private static final int HORA_FIN_NOCHE = 22;
+
+    /**
+     * Analiza y muestra la temperatura máxima registrada en cada ubicación
+     * 
+     * @param mediciones Lista de mediciones de temperatura
+     * @return Map con las temperaturas máximas por ubicación
+     * @throws IllegalArgumentException si la lista de mediciones es nula
+     */
+    public Map<String, Double> obtenerTemperaturaMaximaPorUbicacion(List<Medicion> mediciones) {
+        if (mediciones == null) {
+            throw new IllegalArgumentException("La lista de mediciones no puede ser nula");
         }
+
+        Map<String, Double> maxTemperaturas = mediciones.stream()
+            .collect(Collectors.groupingBy(
+                Medicion::getUbicacion,
+                Collectors.mapping(
+                    Medicion::getTemperatura,
+                    Collectors.maxBy(Double::compare)
+                )
+            ))
+            .entrySet().stream()
+            .collect(Collectors.toMap(
+                Map.Entry::getKey,
+                e -> e.getValue().orElse(0.0)
+            ));
+
+        // Registrar resultados
+        maxTemperaturas.forEach((ubicacion, temperatura) -> 
+            Log.d(TAG, String.format("Ubicación: %s, Temperatura máxima: %.1f°C", 
+                ubicacion, temperatura)));
+
+        return Collections.unmodifiableMap(maxTemperaturas);
     }
 
-    // Show results in LogCat
-    for (Map.Entry<String, Double> entry : maxTemperaturas.entrySet()) {
-        Log.d("MaxTemperatura", "Ubicación: " + entry.getKey() + ", Temperatura máxima: " + entry.getValue());
-    }
-}
-
-//b) Calculate the average temperature for different time periods:
-private void calcularTemperaturaMediaPorFranjaHoraria(List<Medicion> mediciones) {
-    double totalMañana = 0, totalTarde = 0, totalNoche = 0;
-    int countMañana = 0, countTarde = 0, countNoche = 0;
-
-    for (Medicion medicion : mediciones) {
-        if (medicion.getHora() >= 8 && medicion.getHora() <= 12) {
-            totalMañana += medicion.getTemperatura();
-            countMañana++;
-        } else if (medicion.getHora() >= 14 && medicion.getHora() <= 18) {
-            totalTarde += medicion.getTemperatura();
-            countTarde++;
-        } else if (medicion.getHora() >= 20 && medicion.getHora() <= 22) {
-            totalNoche += medicion.getTemperatura();
-            countNoche++;
+    /**
+     * Calcula y muestra la temperatura media por franja horaria
+     * 
+     * @param mediciones Lista de mediciones de temperatura
+     * @return Map con las temperaturas medias por franja horaria
+     * @throws IllegalArgumentException si la lista de mediciones es nula
+     */
+    public Map<String, Double> calcularTemperaturaMediaPorFranjaHoraria(List<Medicion> mediciones) {
+        if (mediciones == null) {
+            throw new IllegalArgumentException("La lista de mediciones no puede ser nula");
         }
+
+        Map<String, List<Double>> temperaturasPorFranja = new HashMap<>();
+        temperaturasPorFranja.put("Mañana", new ArrayList<>());
+        temperaturasPorFranja.put("Tarde", new ArrayList<>());
+        temperaturasPorFranja.put("Noche", new ArrayList<>());
+
+        for (Medicion medicion : mediciones) {
+            int hora = medicion.getHora();
+            double temperatura = medicion.getTemperatura();
+
+            if (estaEnRango(hora, HORA_INICIO_MANANA, HORA_FIN_MANANA)) {
+                temperaturasPorFranja.get("Mañana").add(temperatura);
+            } else if (estaEnRango(hora, HORA_INICIO_TARDE, HORA_FIN_TARDE)) {
+                temperaturasPorFranja.get("Tarde").add(temperatura);
+            } else if (estaEnRango(hora, HORA_INICIO_NOCHE, HORA_FIN_NOCHE)) {
+                temperaturasPorFranja.get("Noche").add(temperatura);
+            }
+        }
+
+        Map<String, Double> mediasTemperatura = new HashMap<>();
+
+        temperaturasPorFranja.forEach((franja, temperaturas) -> {
+            double media = temperaturas.isEmpty() ? 0.0 :
+                temperaturas.stream().mapToDouble(Double::doubleValue).average().getAsDouble();
+            mediasTemperatura.put(franja, media);
+            Log.d(TAG, String.format("Temperatura media %s: %.1f°C", franja, media));
+        });
+
+        return Collections.unmodifiableMap(mediasTemperatura);
     }
 
-    Log.d("TemperaturaMedia", "Mañana: " + (totalMañana / countMañana) + "°C");
-    Log.d("TemperaturaMedia", "Tarde: " + (totalTarde / countTarde) + "°C");
-    Log.d("TemperaturaMedia", "Noche: " + (totalNoche / countNoche) + "°C");
+    /**
+     * Verifica si una hora está dentro de un rango específico
+     */
+    private boolean estaEnRango(int hora, int inicio, int fin) {
+        return hora >= inicio && hora <= fin;
+    }
+
+    /**
+     * Constructor privado para evitar instanciación
+     */
+    private AnalizadorTemperaturas() {
+        throw new AssertionError("Esta clase no debe ser instanciada");
+    }
 }
