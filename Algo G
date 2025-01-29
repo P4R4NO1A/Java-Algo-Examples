@@ -1,29 +1,68 @@
-// Algorithm for counting medications per day
+/**
+ * Utility class for analyzing medication schedules
+ */
+public class MedicationScheduleAnalyzer {
+
+    /**
+     * Counts the total number of medication doses scheduled per day
+     * 
+     * @param schedules List of medication schedules to analyze
+     * @return Map with days as keys and total medication doses as values
+     * @throws IllegalArgumentException if schedules is null
+     */
     public static Map<String, Integer> getMedicationsPerDay(List<MedicationSchedule> schedules) {
+        if (schedules == null) {
+            throw new IllegalArgumentException("Medication schedules list cannot be null");
+        }
+
         Map<String, Integer> medicationsPerDay = new HashMap<>();
         
-        for(MedicationSchedule schedule : schedules) {
-            medicationsPerDay.merge(schedule.day, 1, Integer::sum);
+        for (MedicationSchedule schedule : schedules) {
+            if (schedule != null && schedule.day != null) {
+                medicationsPerDay.merge(schedule.day, 1, Integer::sum);
+            }
         }
         
-        return medicationsPerDay;
+        return Collections.unmodifiableMap(medicationsPerDay);
     }
 
-
-    // Algorithm for counting different medications per day
+    /**
+     * Counts the number of unique medications scheduled per day
+     * 
+     * @param schedules List of medication schedules to analyze
+     * @return Map with days as keys and count of unique medications as values
+     * @throws IllegalArgumentException if schedules is null
+     */
     public static Map<String, Integer> getDifferentMedicationsPerDay(List<MedicationSchedule> schedules) {
+        if (schedules == null) {
+            throw new IllegalArgumentException("Medication schedules list cannot be null");
+        }
+
         Map<String, Set<String>> medicationsPerDay = new HashMap<>();
         
-        for(MedicationSchedule schedule : schedules) {
-            medicationsPerDay
-                .computeIfAbsent(schedule.day, k -> new HashSet<>())
-                .add(schedule.medication);
+        for (MedicationSchedule schedule : schedules) {
+            if (schedule != null && schedule.day != null && schedule.medication != null) {
+                medicationsPerDay
+                    .computeIfAbsent(schedule.day, k -> new HashSet<>())
+                    .add(schedule.medication);
+            }
         }
         
-        return medicationsPerDay.entrySet().stream()
-            .collect(Collectors.toMap(
-                Map.Entry::getKey,
-                entry -> entry.getValue().size()
-            ));
+        return Collections.unmodifiableMap(
+            medicationsPerDay.entrySet().stream()
+                .collect(Collectors.toMap(
+                    Map.Entry::getKey,
+                    entry -> entry.getValue().size(),
+                    (v1, v2) -> v1,
+                    HashMap::new
+                ))
+        );
+    }
+
+    /**
+     * Private constructor to prevent instantiation of utility class
+     */
+    private MedicationScheduleAnalyzer() {
+        throw new AssertionError("Utility class should not be instantiated");
     }
 }
