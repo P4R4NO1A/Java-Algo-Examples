@@ -1,30 +1,4 @@
-/*
-A Store has multiple lists: product names, categories, and prices. Write a method to
-create a Map where the key is the product and the value is a Map of category and price.
-*/
+//--------------
+IT HASN'T BEEN SENT
+//--------------
 
-public class Store {
-public static Map<String, Map<String, Double>> createProductMap(
-List<String> products,
-List<String> categories,
-List<Double> prices
-) {
-Map<String, Map<String, Double>> productMap = new HashMap<>();
-for (int i = 0; i < products.size(); i++) {
-Map<String, Double> details = new HashMap<>();
-details.put(categories.get(i), prices.get(i));
-productMap.put(products.get(i), details);
-}
-return productMap;
-}
-}
-// Usage
-List<String> products = Arrays.asList("Apple", "Banana", "Carrot");
-List<String> categories = Arrays.asList("Fruit", "Fruit",
-"Vegetable");
-List<Double> prices = Arrays.asList(1.0, 0.5, 0.8);
-Map<String, Map<String, Double>> productMap =
-Store.createProductMap(products, categories, prices);
-System.out.println(productMap);
-// Output: {Apple={Fruit=1.0}, Banana={Fruit=0.5},
-Carrot={Vegetable=0.8}}
