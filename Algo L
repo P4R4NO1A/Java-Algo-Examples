@@ -1,25 +1,93 @@
-/*
-For each variety of orange, calculate the total volume of juice produced.
+/**
+ * Utilidad para calcular volúmenes de naranjas
+ */
+public class CalculadoraNaranjas {
 
-static List<String> VARIEDAD = Arrays.asList("valencia", "navel",
-"valencia", "clementina");
-static List<Double> DIAMETRO = Arrays.asList(8.0, 9.0, 7.0, 3.0);
-*/
+    private static final String TAG = "CalculadoraNaranjas";
 
-public static Map<String, Double> calcularVolumen(List<String>
-variedad, List<Double> diametro) {
-Map<String, Double> volumenes = new HashMap<>();
-for (int i = 0; i < variedad.size(); i++) {
-double volumen = Math.PI * Math.pow(diametro.get(i) / 2, 3) *
-4 / 3; // Approx. sphere volume
-volumenes.put(variedad.get(i),
-volumenes.getOrDefault(variedad.get(i), 0.0) + volumen);
-}
-return volumenes;
-}
-// Usage
-Map<String, Double> volumenes = calcularVolumen(VARIEDAD, DIAMETRO);
-for (Map.Entry<String, Double> entry : volumenes.entrySet()) {
-Log.d("MainActivity", "Variedad: " + entry.getKey() + ", Volumen:
-" + entry.getValue());
+    /**
+     * Calcula el volumen total de jugo para cada variedad de naranja
+     * 
+     * @param variedades Lista de variedades de naranjas
+     * @param diametros Lista de diámetros correspondientes en centímetros
+     * @return Map con variedad como clave y volumen total en centímetros cúbicos
+     * @throws IllegalArgumentException si las listas son nulas o tienen tamaños diferentes
+     */
+    public static Map<String, Double> calcularVolumenPorVariedad(
+            List<String> variedades, 
+            List<Double> diametros) {
+            
+        // Validación de entrada
+        validarEntrada(variedades, diametros);
+
+        // Calcular volúmenes
+        Map<String, Double> volumenes = new HashMap<>();
+        
+        for (int i = 0; i < variedades.size(); i++) {
+            String variedad = variedades.get(i);
+            double diametro = diametros.get(i);
+            
+            if (diametro <= 0) {
+                Log.w(TAG, String.format("Diámetro no válido (%f) para variedad %s", 
+                    diametro, variedad));
+                continue;
+            }
+
+            double volumen = calcularVolumenEsfera(diametro);
+            volumenes.merge(variedad, volumen, Double::sum);
+        }
+
+        return Collections.unmodifiableMap(volumenes);
+    }
+
+    /**
+     * Calcula el volumen de una esfera dado su diámetro
+     */
+    private static double calcularVolumenEsfera(double diametro) {
+        double radio = diametro / 2.0;
+        return (4.0 / 3.0) * Math.PI * Math.pow(radio, 3);
+    }
+
+    /**
+     * Valida las listas de entrada
+     */
+    private static void validarEntrada(List<String> variedades, List<Double> diametros) {
+        if (variedades == null || diametros == null) {
+            throw new IllegalArgumentException("Las listas no pueden ser nulas");
+        }
+        
+        if (variedades.isEmpty() || diametros.isEmpty()) {
+            throw new IllegalArgumentException("Las listas no pueden estar vacías");
+        }
+
+        if (variedades.size() != diametros.size()) {
+            throw new IllegalArgumentException(
+                "Las listas deben tener el mismo tamaño: " +
+                "variedades=" + variedades.size() + 
+                ", diametros=" + diametros.size()
+            );
+        }
+    }
+
+    // Ejemplo de uso
+    public static void main(String[] args) {
+        List<String> VARIEDAD = Arrays.asList("valencia", "navel", "valencia", "clementina");
+        List<Double> DIAMETRO = Arrays.asList(8.0, 9.0, 7.0, 3.0);
+
+        try {
+            Map<String, Double> volumenes = calcularVolumenPorVariedad(VARIEDAD, DIAMETRO);
+            
+            for (Map.Entry<String, Double> entry : volumenes.entrySet()) {
+                Log.d(TAG, String.format("Variedad: %s, Volumen: %.2f cm³", 
+                    entry.getKey(), 
+                    entry.getValue()));
+            }
+        } catch (IllegalArgumentException e) {
+            Log.e(TAG, "Error al calcular volúmenes: " + e.getMessage());
+        }
+    }
+
+    private CalculadoraNaranjas() {
+        throw new AssertionError("Esta clase no debe ser instanciada");
+    }
 }
