@@ -1,24 +1,33 @@
-/*
-Usa las listas definidas en el apartado anterior.
-Calcula y muestra en el LogCat:
-El trabajador con el salario más alto.
-El salario promedio de todos los trabajadores.
+/**
+ * Análisis de salarios de trabajadores
+ * - Encuentra el trabajador con el salario más alto
+ * - Calcula el salario promedio de todos los trabajadores
+ */
+public void analizarSalarios(List<Worker> workerList) {
+    if (workerList == null || workerList.isEmpty()) {
+        Log.w("Análisis", "La lista de trabajadores está vacía o es nula");
+        return;
+    }
 
-*/
+    try {
+        // Encuentra el trabajador con el salario más alto
+        Worker trabajadorMejorPagado = workerList.stream()
+                .max(Comparator.comparingInt(Worker::calculateSalary))
+                .orElseThrow(() -> new IllegalStateException("No se pudo determinar el salario más alto"));
 
-//Finding the Worker with the Highest Salary:
-Worker highestPaid = workerList.stream()
-    .max(Comparator.comparingInt(Worker::calculateSalary))
-    .orElse(null);
+        Log.d("Análisis", String.format("Trabajador mejor pagado: %s, Salario: %d€", 
+                trabajadorMejorPagado.toString(), 
+                trabajadorMejorPagado.calculateSalary()));
 
-if (highestPaid != null) {
-    Log.d("HighestPaid", "Trabajador con mayor salario: " + highestPaid.toString());
+        // Calcula el salario promedio
+        double salarioPromedio = workerList.stream()
+                .mapToInt(Worker::calculateSalary)
+                .average()
+                .orElseThrow(() -> new IllegalStateException("No se pudo calcular el salario promedio"));
+
+        Log.d("Análisis", String.format("Salario promedio: %.2f€", salarioPromedio));
+
+    } catch (IllegalStateException e) {
+        Log.e("Análisis", "Error al procesar salarios: " + e.getMessage());
+    }
 }
-
-//Calculating Average Salary:
-double averageSalary = workerList.stream()
-    .mapToInt(Worker::calculateSalary)
-    .average()
-    .orElse(0);
-
-Log.d("AverageSalary", "Salario promedio: " + averageSalary);
